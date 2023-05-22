@@ -1,5 +1,6 @@
 import { useRanking } from '@/hooks/api/getRanking';
 import { SortableIcon } from '@/ui/atoms/SortableIcon';
+import { Spinner } from '@/ui/atoms/Spinner';
 import { Seasons } from '@/ui/molecules/Seasons';
 import { Header } from '@/ui/organisms/Header';
 import { useState } from 'react';
@@ -8,7 +9,7 @@ export const MainPage = () => {
   const [isTeams, setIsTeams] = useState<boolean>(false);
   const [season, setSeason] = useState<string>('2012');
 
-  const { rankings } = useRanking(isTeams, season);
+  const { rankings, isLoading } = useRanking(isTeams, season);
 
   const { response: results } = rankings ?? {};
 
@@ -42,87 +43,94 @@ export const MainPage = () => {
         </div>
 
         <div className="relative overflow-x-auto mt-5">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Position
-                    <button
-                      className="trasparent"
-                      onClick={() => handleSort('position')}
-                    >
-                      <SortableIcon />
-                    </button>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Name
-                    <button
-                      className="trasparent"
-                      onClick={() => handleSort('name')}
-                    >
-                      <SortableIcon />
-                    </button>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Logo
-                    <button
-                      className="trasparent"
-                      onClick={() => handleSort('logo')}
-                    >
-                      <SortableIcon />
-                    </button>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Points
-                    <button
-                      className="trasparent"
-                      onClick={() => handleSort('points')}
-                    >
-                      <SortableIcon />
-                    </button>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {results?.map((result, index) => (
-                <tr
-                  /** This should be something other the index, like a unique id */
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {result.position}
+          {!isLoading && (
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center">
+                      Position
+                      <button
+                        className="trasparent"
+                        onClick={() => handleSort('position')}
+                      >
+                        <SortableIcon />
+                      </button>
+                    </div>
                   </th>
-                  <td className="px-6 py-4">
-                    {isTeams ? result.team?.name : result.driver?.name}
-                  </td>
-                  <td className="px-6 py-4">
-                    {result.team.logo ? (
-                      <img
-                        className="h-10 "
-                        src={result.team.logo}
-                        alt={`${result.team.name} logo`}
-                      />
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                  <td className="px-6 py-4">{result.points}</td>
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center">
+                      Name
+                      <button
+                        className="trasparent"
+                        onClick={() => handleSort('name')}
+                      >
+                        <SortableIcon />
+                      </button>
+                    </div>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center">
+                      Logo
+                      <button
+                        className="trasparent"
+                        onClick={() => handleSort('logo')}
+                      >
+                        <SortableIcon />
+                      </button>
+                    </div>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center">
+                      Points
+                      <button
+                        className="trasparent"
+                        onClick={() => handleSort('points')}
+                      >
+                        <SortableIcon />
+                      </button>
+                    </div>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {results?.map((result, index) => (
+                  <tr
+                    /** This should be something other the index, like a unique id */
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {result.position}
+                    </th>
+                    <td className="px-6 py-4">
+                      {isTeams ? result.team?.name : result.driver?.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      {result.team.logo ? (
+                        <img
+                          className="h-10 "
+                          src={result.team.logo}
+                          alt={`${result.team.name} logo`}
+                        />
+                      ) : (
+                        '-'
+                      )}
+                    </td>
+                    <td className="px-6 py-4">{result.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {isLoading && (
+            <div className="flex justify-center items-center w-full h-full">
+              <Spinner />
+            </div>
+          )}
         </div>
       </main>
     </>

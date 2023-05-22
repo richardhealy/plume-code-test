@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const baseHeaders = {
-  'x-apisports-key': 'b054b6d194f036f0498442e261b1cebc',
+  'x-apisports-key': import.meta.env.VITE_API_SPORTS_KEY ?? '',
 };
 
 export const axiosFetcher = (url: string) =>
