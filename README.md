@@ -12,6 +12,8 @@
 cp .env.template .env
 ```
 
+### Start dev mode
+
 ```
 yarn dev
 ```
