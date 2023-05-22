@@ -7,7 +7,8 @@ export const baseHeaders = {
 export const axiosFetcher = (url: string) =>
   axios
     .get(url, {
-      baseURL: `https://v1.formula-1.api-sports.io/`,
+      baseURL:
+        import.meta.env.VITE_API_URL ?? `https://v1.formula-1.api-sports.io/`,
       headers: {
         ...baseHeaders,
       },
